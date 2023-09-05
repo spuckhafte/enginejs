@@ -9,6 +9,9 @@ export class Vector {
         return Math.sqrt(Math.pow(this.x - this.x0, 2) +
             Math.pow(this.y - this.y0, 2));
     }
+    dirn() {
+        return Math.atan2((this.y - this.y0), (this.x - this.x0));
+    }
     dot(vec) {
         return ((this.x - this.x0) * (vec.x - vec.x0)) +
             ((this.y - this.y0) * (vec.y - vec.y0));
@@ -23,5 +26,8 @@ export class Vector {
 export class PVector extends Vector {
     constructor(x, y) {
         super(x, y, 0, 0);
+    }
+    vectorTo(vec) {
+        return new Vector(vec.x, vec.y, this.x, this.y);
     }
 }

@@ -5,10 +5,12 @@ export declare class Vector {
     y0: number;
     constructor(x: number, y: number, x0: number, y0: number);
     value(): number;
+    dirn(): number;
     dot(vec: Vector): number;
     scale(scalar: number): Vector;
     normalize(): Vector;
 }
 export declare class PVector extends Vector {
     constructor(x: number, y: number);
+    vectorTo(vec: Vector): Vector;
 }

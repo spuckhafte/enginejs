@@ -1,14 +1,17 @@
 import { Physics, TheBody } from "../../types";
-import Criya, { criya_Init } from "../helpers/criya";
-import { PVector } from "./vectors";
+import Criya from "../helpers/criya";
+import { PVector, Vector } from "./vectors";
 
+/**
+ * The `GameObject` class in Criya encapsulates the attributes and behavior of individual game objects, including their physical properties, appearance details, and customizable logic hooks (eg: `onrefresh` and `onready`).
+ */
 export class GameObject extends Criya {
 
     /**Physical properties of a game object, viz: position, velocity, etc. */
     physics: Physics = {
         position: new PVector(0, 0),
-        velocity: new PVector(0, 0),
-        acceleration: new PVector(0, 0)
+        velocity: new Vector(0, 0, 0, 0),
+        acceleration: new Vector(0, 0, 0 ,0)
     }
 
     /**Describe how the object will look like */
@@ -19,41 +22,51 @@ export class GameObject extends Criya {
     }
 
     /**This function will be called when the game object is ready and is on the scene */
-    onready: CallableFunction|null = null;
+    onready: CallableFunction | null = null;
 
-    constructor(init: criya_Init) {
-        super(init);
+    /**This function gets called whenever the screen refreshes */
+    onrefresh: CallableFunction | null = null;
 
-        const _this = this
-        function __renderEffect() {
-            _this.physics.velocity.x += _this.physics.acceleration.x;
-                _this.physics.velocity.y += _this.physics.acceleration.y;
-    
-                _this.physics.position.x += _this.physics.velocity.x;
-                _this.physics.position.y += _this.physics.velocity.y;
-    
-                _this.prop = {
-                    ..._this.prop,
-                    css: {
-                        ..._this.prop?.css,
-                        position: 'absolute',
-    
-                        left: _this.physics.position.x + "px",
-                        top: -_this.physics.position.y + "px",
-    
-                        width: _this.body.width + "px",
-                        height: _this.body.height + "px",
-                        backgroundColor: _this.body.color,
-    
-                    }
+    constructor(init?: { class?: string, id?: string }) {
+        super({ type: "div", parent: "#app", ...init });
+
+        this.prop = {
+            ...this.prop,
+            css: {
+                transform: "translate(-50%, -50%)"
+            }
+        }
+
+        // class' [this] is getting shadowed inside the function
+        const This = this;
+        function __refresh() {
+            This.physics.velocity.x += This.physics.acceleration.x;
+            This.physics.velocity.y += This.physics.acceleration.y;
+
+            This.physics.position.x += This.physics.velocity.x;
+            This.physics.position.y += This.physics.velocity.y;
+
+            This.prop = {
+                ...This.prop,
+                css: {
+                    ...This.prop?.css,
+                    position: 'absolute',
+
+                    left: This.physics.position.x + "px",
+                    top: -This.physics.position.y + "px",
+
+                    width: This.body.width + "px",
+                    height: This.body.height + "px",
+                    backgroundColor: This.body.color,
                 }
-    
-            _this.render();
+            }
+
+            This.render();
         }
 
         this.onSubscribed(() => {
-            if (!this.effects.find(eff => eff.func.name == "__renderEffect")) {
-                this.effect(__renderEffect, ['%delta%']);
+            if (!this.effects.find(eff => eff.func.name == "__refresh")) {
+                this.effect(__refresh, ['%delta%']);
             }
         });
     }

@@ -1,12 +1,15 @@
 import { Scene_Init } from "../../types";
-import Criya, { criya_Func } from "../helpers/criya";
+import Criya from "../helpers/criya";
 import { GameObject } from "./gameObject";
 export declare class Scene {
     fps: number;
-    delta: (newVal: number | criya_Func<number, number>) => void;
+    private delta;
     gameObjects: GameObject[];
     element: Criya;
+    G: number;
+    private massyObjects;
     constructor(init: Scene_Init);
     pack(items: GameObject[]): void;
     start(): void;
+    private gravitySimulator;
 }

@@ -1,11 +1,11 @@
-import { Vector } from "./src"
+import { PVector, Vector } from "./src"
 
 export interface Scene_Init {
     fps: number
 }
 
 export interface Physics {
-    position: Vector
+    position: PVector
     velocity: Vector
     acceleration: Vector
     mass?: number,

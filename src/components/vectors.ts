@@ -1,3 +1,7 @@
+/**
+ * 
+The `Vector` class is a versatile utility for performing essential two-dimensional vector operations. It encompasses functions for calculating vector magnitude, angle with the x-axis, dot product with other vectors, scaling, and normalization.
+*/
 export class Vector {
     x: number; x0: number;
     y: number; y0: number;
@@ -13,6 +17,11 @@ export class Vector {
             Math.pow(this.x - this.x0, 2) + 
             Math.pow(this.y - this.y0, 2)
         );
+    }
+
+    /**Angle with the x-axis */
+    dirn() {
+        return Math.atan2((this.y - this.y0), (this.x - this.x0));
     }
 
     /**Dot product of "vec" vector with the OG vector */
@@ -44,9 +53,18 @@ export class Vector {
     }
 }
 
-/**Position Vector */
+/**
+ * The `PVector` class is a specialized version of the `Vector` class, designed for representing position vectors. It simplifies the creation of position vectors with default origin values and provides a method for calculating vectors pointing from the current position to a specified destination.
+ */
 export class PVector extends Vector {
     constructor(x: number, y :number) {
         super(x, y, 0, 0);
+    }
+
+    vectorTo(vec: Vector) {
+        return new Vector(
+            vec.x, vec.y,
+            this.x, this.y
+        );
     }
 }

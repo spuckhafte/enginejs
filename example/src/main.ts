@@ -3,32 +3,33 @@ import { GameObject, PVector, Scene } from '../../src/index';
 
 const scene = new Scene({ fps: 60 });
 
-const object = new GameObject({ type: 'div', parent: "#app" });
-object.physics = {
-    ...object.physics,
-    position: new PVector(200, -200),
-    velocity: new PVector(0, 0),
-    acceleration: new PVector(0, 0),
+
+const sun = new GameObject();
+sun.physics = {
+    ...sun.physics,
+    position: new PVector(700, -300),
 }
-object.body = {
-    ...object.body,
+sun.body = {
+    ...sun.body,
+    width: 200,
+    height: 200,
+    color: 'orange'
+}
+
+
+const planet = new GameObject();
+planet.physics = {
+    ...planet.physics,
+    position: new PVector(400, -310),
+    mass: 0
+}
+planet.body = {
+    ...planet.body,
     width: 50,
     height: 50,
-    color: 'red'
+    color: 'blue'
 }
-object.render();
 
 
-const body = new GameObject({ type: 'div', parent: "#app" });
-body.physics = {
-    ...body.physics,
-    position: new PVector(500, -200),
-}
-body.body = {
-    ...object.body,
-    color: 'black'
-}
-body.render();
-
-scene.pack([object, body]);
+scene.pack([sun, planet]);
 scene.start();
