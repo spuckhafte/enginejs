@@ -1,6 +1,5 @@
 /**
- * 
-The `Vector` class is a versatile utility for performing essential two-dimensional vector operations. It encompasses functions for calculating vector magnitude, angle with the x-axis, dot product with other vectors, scaling, and normalization.
+ * The `Vector` class is a versatile utility for performing essential two-dimensional vector operations. It encompasses functions for calculating vector magnitude, angle with the x-axis, dot product with other vectors, scaling, and normalization.
 */
 export class Vector {
     x: number; x0: number;
@@ -14,29 +13,28 @@ export class Vector {
     /**Magnitude of vector */
     value() {
         return Math.sqrt(
-            Math.pow(this.x - this.x0, 2) + 
-            Math.pow(this.y - this.y0, 2)
+            Math.pow(this.X, 2) + 
+            Math.pow(this.Y, 2)
         );
     }
 
     /**Angle with the x-axis */
     dirn() {
-        return Math.atan2((this.y - this.y0), (this.x - this.x0));
+        return Math.atan2(this.Y, this.X);
     }
 
     /**Dot product of "vec" vector with the OG vector */
     dot(vec: Vector) {
         return (
-            (this.x - this.x0) * (vec.x - vec.x0)) + 
-            ((this.y - this.y0) * (vec.y - vec.y0)
+            (this.X * vec.X) + (this.Y * vec.Y)
         );
     }
 
     /**Multiply a scalar to the OG vector */
     scale(scalar: number) {
         return new Vector(
-            this.x0 + (scalar * (this.x - this.x0)), 
-            this.y0 + (scalar * (this.y - this.y0)), 
+            this.x0 + (scalar * this.X), 
+            this.y0 + (scalar * this.Y), 
             this.x0, 
             this.y0
         );
@@ -45,11 +43,29 @@ export class Vector {
     /**Get a unit vector along the OG vector */
     normalize() {
         return new Vector(
-            (this.x - this.x0) / this.value(),
-            (this.y - this.y0) / this.value(),
+            this.X / this.value(),
+            this.Y / this.value(),
             this.x0,
             this.y0
         )
+    }
+
+    /**Flips the sign of each component and returns a new vector */
+    flip() {
+        return new Vector(
+            -this.x, -this.y,
+            this.x0, this.y0
+        );
+    }
+
+    /**Net component in X-direction */
+    get X() {
+        return this.x - this.x0
+    }
+
+    /**Net component in Y-direction */
+    get Y() {
+        return this.y - this.y0
     }
 }
 
@@ -61,7 +77,7 @@ export class PVector extends Vector {
         super(x, y, 0, 0);
     }
 
-    vectorTo(vec: Vector) {
+    vectorTo(vec: PVector) {
         return new Vector(
             vec.x, vec.y,
             this.x, this.y

@@ -20,6 +20,7 @@ export class Scene {
     G = 0.01;
 
     private massyObjects: GameObject[] = [];
+    private collidables: GameObject[] = [];
 
     constructor(init: Scene_Init) {
         this.element = new Criya({ type: 'span', parent: "#app" });
@@ -42,7 +43,11 @@ export class Scene {
                 this.massyObjects.push(object);
             }
 
-            if (object.onready) 
+            if (object.physics.collision) {
+                this.collidables.push(object);
+            }
+
+            if (object.onready)
                 object.onready();
             if (object.onrefresh)
                 object.effect(object.onrefresh, ['%delta%']);
@@ -50,6 +55,7 @@ export class Scene {
 
         this.element.effect(() => {
             this.gravitySimulator();
+            this.collisonDetector();
         }, ['$delta$']);
 
         setInterval(() => {
@@ -57,7 +63,7 @@ export class Scene {
         }, 1 / this.fps * 1000);
     }
 
-    /**Calculate and apply gravitational effects on every "massy" object due to every "massy" object */
+    /**Calculates and apply gravitational effects on every "massy" object due to every "massy" object */
     private gravitySimulator() {
         const doneWith: number[] = [];
 
@@ -73,7 +79,7 @@ export class Scene {
                 if (!other.physics.mass) continue;
 
                 const directionVector = object.physics.position.vectorTo(other.physics.position);
-                const forceMaginitude = 
+                const forceMaginitude =
                     this.G * ((object.physics.mass * other.physics.mass) / directionVector.value());
 
                 const accelerationForObject = new PVector(
@@ -101,5 +107,102 @@ export class Scene {
 
             doneWith.push(objectIndex)
         }
+    }
+
+    /**Checks if any of the `collidables` is colliding with another */
+    private collisonDetector() {
+        const doneWith: number[] = [];
+
+        for (let objectIndex = 0; objectIndex < this.collidables.length; objectIndex += 1) {
+            const object = this.collidables[objectIndex];
+
+            for (let otherIndex = 0; otherIndex < this.collidables.length; otherIndex += 1) {
+                if (otherIndex == objectIndex || doneWith.includes(otherIndex)) continue;
+                const other = this.collidables[otherIndex];
+
+                const displacement = object.physics.position.vectorTo(other.physics.position);
+                
+                if (object.physics.collision == 'rectangle') {
+                    if (other.physics.collision == 'circle') {
+                        // yet to be figured
+                    } 
+                    
+                    if (other.physics.collision == 'rectangle') {
+                        const xColliding = 
+                            Math.abs(displacement.X) <= 
+                            ((object.body.width/2) + (other.body.width/2));
+                        
+                        const yColliding = 
+                            Math.abs(displacement.Y) <= 
+                            ((object.body.height/2) + (other.body.height/2));
+
+                        if (xColliding && yColliding) {
+                            if (
+                                typeof object.physics.restitution == 'number' &&
+                                typeof other.physics.restitution == 'number'
+                            ) this.afterCollison(object, other);
+                            if (object.onCollision) object.onCollision(other);
+                            if (other.onCollision) other.onCollision(object);
+                        }
+                    }
+                }
+
+                if (object.physics.collision == 'circle') {
+                    if (other.physics.collision == 'rectangle') {
+                        // yet to be figured
+                    }
+
+                    if (other.physics.collision == 'circle') {
+                        const circlesColliding = 
+                            displacement.value() <= (object.body.width/2 + other.body.width/2);
+
+                        if (circlesColliding) {
+                            if (
+                                typeof object.physics.restitution == 'number' &&
+                                typeof other.physics.restitution == 'number'
+                            ) this.afterCollison(object, other);
+                            if (object.onCollision) object.onCollision(other);
+                            if (other.onCollision) other.onCollision(object);
+                        }
+                    }
+                }
+            }
+
+            doneWith.push(objectIndex);
+        }
+    }
+
+    private afterCollison(object1: GameObject, object2: GameObject) {
+        /* DOESN't WORK */
+
+        // const displacement1 = object1.physics.position.vectorTo(object2.physics.position);
+        // const displacement2 = object2.physics.position.vectorTo(object1.physics.position);
+
+        // const 
+        //     m1 = object1.physics.mass as number, 
+        //     m2 = object2.physics.mass as number,
+
+        //     u1x = object1.physics.velocity.X, 
+        //     u2x = object2.physics.velocity.X,
+
+        //     u1y = object1.physics.velocity.Y,
+        //     u2y = object2.physics.velocity.Y,
+
+        //     e = (object1.physics.restitution as number) 
+        //         + (object2.physics.restitution as number) / 2;
+
+
+        // const 
+        //     v1x = ((m1 * u1x) + (m2 * u2x) - (m2 * e * Math.abs(u1x - u2x))) / (m1 + m2),
+        //     v1y = ((m1 * u1y) + (m2 * u2y) - (m2 * e * Math.abs(u1y - u2y))) / (m1 + m2),
+
+        //     v2x = (e * Math.abs(u1x - u2x)) + v1x,
+        //     v2y = (e * Math.abs(u1y - u2y)) + v1y;
+        
+
+        // console.log(object1.physics.velocity, object2.physics.velocity);
+
+        // object1.physics.velocity = new PVector(v1x, v1y)
+        // object2.physics.velocity = new PVector(v2x, v2y);
     }
 }

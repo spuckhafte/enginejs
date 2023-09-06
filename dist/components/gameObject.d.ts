@@ -5,6 +5,7 @@ export declare class GameObject extends Criya {
     body: TheBody;
     onready: CallableFunction | null;
     onrefresh: CallableFunction | null;
+    onCollision: ((object: GameObject) => void) | null;
     constructor(init?: {
         class?: string;
         id?: string;

@@ -9,6 +9,8 @@ export interface Physics {
     velocity: Vector
     acceleration: Vector
     mass?: number,
+    collision?: 'rectangle' | 'circle',
+    restitution?: number
 }
 
 export interface TheBody {

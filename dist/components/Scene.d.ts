@@ -8,8 +8,11 @@ export declare class Scene {
     element: Criya;
     G: number;
     private massyObjects;
+    private collidables;
     constructor(init: Scene_Init);
     pack(items: GameObject[]): void;
     start(): void;
     private gravitySimulator;
+    private collisonDetector;
+    private afterCollison;
 }

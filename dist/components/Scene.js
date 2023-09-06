@@ -5,6 +5,7 @@ export class Scene {
         this.gameObjects = [];
         this.G = 0.01;
         this.massyObjects = [];
+        this.collidables = [];
         this.element = new Criya({ type: 'span', parent: "#app" });
         this.fps = init.fps;
         this.delta = this.element.state('delta', 0)[1];
@@ -19,6 +20,9 @@ export class Scene {
             if (object.physics.mass) {
                 this.massyObjects.push(object);
             }
+            if (object.physics.collision) {
+                this.collidables.push(object);
+            }
             if (object.onready)
                 object.onready();
             if (object.onrefresh)
@@ -26,6 +30,7 @@ export class Scene {
         }
         this.element.effect(() => {
             this.gravitySimulator();
+            this.collisonDetector();
         }, ['$delta$']);
         setInterval(() => {
             this.delta(prev => prev ? 0 : 1);
@@ -55,5 +60,55 @@ export class Scene {
             }
             doneWith.push(objectIndex);
         }
+    }
+    collisonDetector() {
+        const doneWith = [];
+        for (let objectIndex = 0; objectIndex < this.collidables.length; objectIndex += 1) {
+            const object = this.collidables[objectIndex];
+            for (let otherIndex = 0; otherIndex < this.collidables.length; otherIndex += 1) {
+                if (otherIndex == objectIndex || doneWith.includes(otherIndex))
+                    continue;
+                const other = this.collidables[otherIndex];
+                const displacement = object.physics.position.vectorTo(other.physics.position);
+                if (object.physics.collision == 'rectangle') {
+                    if (other.physics.collision == 'circle') {
+                    }
+                    if (other.physics.collision == 'rectangle') {
+                        const xColliding = Math.abs(displacement.X) <=
+                            ((object.body.width / 2) + (other.body.width / 2));
+                        const yColliding = Math.abs(displacement.Y) <=
+                            ((object.body.height / 2) + (other.body.height / 2));
+                        if (xColliding && yColliding) {
+                            if (typeof object.physics.restitution == 'number' &&
+                                typeof other.physics.restitution == 'number')
+                                this.afterCollison(object, other);
+                            if (object.onCollision)
+                                object.onCollision(other);
+                            if (other.onCollision)
+                                other.onCollision(object);
+                        }
+                    }
+                }
+                if (object.physics.collision == 'circle') {
+                    if (other.physics.collision == 'rectangle') {
+                    }
+                    if (other.physics.collision == 'circle') {
+                        const circlesColliding = displacement.value() <= (object.body.width / 2 + other.body.width / 2);
+                        if (circlesColliding) {
+                            if (typeof object.physics.restitution == 'number' &&
+                                typeof other.physics.restitution == 'number')
+                                this.afterCollison(object, other);
+                            if (object.onCollision)
+                                object.onCollision(other);
+                            if (other.onCollision)
+                                other.onCollision(object);
+                        }
+                    }
+                }
+            }
+            doneWith.push(objectIndex);
+        }
+    }
+    afterCollison(object1, object2) {
     }
 }

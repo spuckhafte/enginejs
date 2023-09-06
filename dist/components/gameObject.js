@@ -6,7 +6,7 @@ export class GameObject extends Criya {
         this.physics = {
             position: new PVector(0, 0),
             velocity: new Vector(0, 0, 0, 0),
-            acceleration: new Vector(0, 0, 0, 0)
+            acceleration: new Vector(0, 0, 0, 0),
         };
         this.body = {
             width: 10,
@@ -15,6 +15,7 @@ export class GameObject extends Criya {
         };
         this.onready = null;
         this.onrefresh = null;
+        this.onCollision = null;
         this.prop = Object.assign(Object.assign({}, this.prop), { css: {
                 transform: "translate(-50%, -50%)"
             } });

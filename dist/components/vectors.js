@@ -6,21 +6,29 @@ export class Vector {
         this.y0 = y0;
     }
     value() {
-        return Math.sqrt(Math.pow(this.x - this.x0, 2) +
-            Math.pow(this.y - this.y0, 2));
+        return Math.sqrt(Math.pow(this.X, 2) +
+            Math.pow(this.Y, 2));
     }
     dirn() {
-        return Math.atan2((this.y - this.y0), (this.x - this.x0));
+        return Math.atan2(this.Y, this.X);
     }
     dot(vec) {
-        return ((this.x - this.x0) * (vec.x - vec.x0)) +
-            ((this.y - this.y0) * (vec.y - vec.y0));
+        return ((this.X * vec.X) + (this.Y * vec.Y));
     }
     scale(scalar) {
-        return new Vector(this.x0 + (scalar * (this.x - this.x0)), this.y0 + (scalar * (this.y - this.y0)), this.x0, this.y0);
+        return new Vector(this.x0 + (scalar * this.X), this.y0 + (scalar * this.Y), this.x0, this.y0);
     }
     normalize() {
-        return new Vector((this.x - this.x0) / this.value(), (this.y - this.y0) / this.value(), this.x0, this.y0);
+        return new Vector(this.X / this.value(), this.Y / this.value(), this.x0, this.y0);
+    }
+    flip() {
+        return new Vector(-this.x, -this.y, this.x0, this.y0);
+    }
+    get X() {
+        return this.x - this.x0;
+    }
+    get Y() {
+        return this.y - this.y0;
     }
 }
 export class PVector extends Vector {

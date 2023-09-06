@@ -9,8 +9,11 @@ export declare class Vector {
     dot(vec: Vector): number;
     scale(scalar: number): Vector;
     normalize(): Vector;
+    flip(): Vector;
+    get X(): number;
+    get Y(): number;
 }
 export declare class PVector extends Vector {
     constructor(x: number, y: number);
-    vectorTo(vec: Vector): Vector;
+    vectorTo(vec: PVector): Vector;
 }

@@ -11,7 +11,7 @@ export class GameObject extends Criya {
     physics: Physics = {
         position: new PVector(0, 0),
         velocity: new Vector(0, 0, 0, 0),
-        acceleration: new Vector(0, 0, 0 ,0)
+        acceleration: new Vector(0, 0, 0, 0),
     }
 
     /**Describe how the object will look like */
@@ -26,6 +26,9 @@ export class GameObject extends Criya {
 
     /**This function gets called whenever the screen refreshes */
     onrefresh: CallableFunction | null = null;
+
+    /**This function will get called whenver this object will collide with another `collidable` object */
+    onCollision: ((object: GameObject) => void) | null = null;
 
     constructor(init?: { class?: string, id?: string }) {
         super({ type: "div", parent: "#app", ...init });
