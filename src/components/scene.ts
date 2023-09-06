@@ -172,37 +172,37 @@ export class Scene {
         }
     }
 
-    private afterCollison(object1: GameObject, object2: GameObject) {
+    private afterCollision(object1: GameObject, object2: GameObject) {
         /* DOESN't WORK */
 
         // const displacement1 = object1.physics.position.vectorTo(object2.physics.position);
         // const displacement2 = object2.physics.position.vectorTo(object1.physics.position);
 
-        // const 
-        //     m1 = object1.physics.mass as number, 
-        //     m2 = object2.physics.mass as number,
+        const 
+            m1 = object1.physics.mass as number, 
+            m2 = object2.physics.mass as number,
 
-        //     u1x = object1.physics.velocity.X, 
-        //     u2x = object2.physics.velocity.X,
+            u1x = object1.physics.velocity.X, 
+            u2x = object2.physics.velocity.X,
 
-        //     u1y = object1.physics.velocity.Y,
-        //     u2y = object2.physics.velocity.Y,
+            u1y = object1.physics.velocity.Y,
+            u2y = object2.physics.velocity.Y,
 
-        //     e = (object1.physics.restitution as number) 
-        //         + (object2.physics.restitution as number) / 2;
+            e = (object1.physics.restitution as number) 
+                + (object2.physics.restitution as number) / 2;
 
 
-        // const 
-        //     v1x = ((m1 * u1x) + (m2 * u2x) - (m2 * e * Math.abs(u1x - u2x))) / (m1 + m2),
-        //     v1y = ((m1 * u1y) + (m2 * u2y) - (m2 * e * Math.abs(u1y - u2y))) / (m1 + m2),
+        const 
+            v1x = ((m1 * u1x) + (m2 * u2x) - (m2 * e * Math.abs(u1x - u2x))) / (m1 + m2),
+            v1y = ((m1 * u1y) + (m2 * u2y) - (m2 * e * Math.abs(u1y - u2y))) / (m1 + m2),
 
-        //     v2x = (e * Math.abs(u1x - u2x)) + v1x,
-        //     v2y = (e * Math.abs(u1y - u2y)) + v1y;
+            v2x = (e * Math.abs(u1x - u2x)) + v1x,
+            v2y = (e * Math.abs(u1y - u2y)) + v1y;
         
 
-        // console.log(object1.physics.velocity, object2.physics.velocity);
+        console.log(object1.physics.velocity, object2.physics.velocity);
 
-        // object1.physics.velocity = new PVector(v1x, v1y)
-        // object2.physics.velocity = new PVector(v2x, v2y);
+        object1.physics.velocity = new PVector(v1x, v1y)
+        object2.physics.velocity = new PVector(v2x, v2y);
     }
 }
