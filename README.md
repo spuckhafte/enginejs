@@ -1,4 +1,4 @@
-# enginejs
+# injan.js
 simple game engine for the web.
 
 ### Features:
