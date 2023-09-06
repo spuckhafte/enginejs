@@ -81,7 +81,7 @@ export class Scene {
                         if (xColliding && yColliding) {
                             if (typeof object.physics.restitution == 'number' &&
                                 typeof other.physics.restitution == 'number')
-                                this.afterCollison(object, other);
+                                this.afterCollision(object, other);
                             if (object.onCollision)
                                 object.onCollision(other);
                             if (other.onCollision)
@@ -97,7 +97,7 @@ export class Scene {
                         if (circlesColliding) {
                             if (typeof object.physics.restitution == 'number' &&
                                 typeof other.physics.restitution == 'number')
-                                this.afterCollison(object, other);
+                                this.afterCollision(object, other);
                             if (object.onCollision)
                                 object.onCollision(other);
                             if (other.onCollision)
@@ -109,6 +109,12 @@ export class Scene {
             doneWith.push(objectIndex);
         }
     }
-    afterCollison(object1, object2) {
+    afterCollision(object1, object2) {
+        const m1 = object1.physics.mass, m2 = object2.physics.mass, u1x = object1.physics.velocity.X, u2x = object2.physics.velocity.X, u1y = object1.physics.velocity.Y, u2y = object2.physics.velocity.Y, e = object1.physics.restitution
+            + object2.physics.restitution / 2;
+        const v1x = ((m1 * u1x) + (m2 * u2x) - (m2 * e * Math.abs(u1x - u2x))) / (m1 + m2), v1y = ((m1 * u1y) + (m2 * u2y) - (m2 * e * Math.abs(u1y - u2y))) / (m1 + m2), v2x = (e * Math.abs(u1x - u2x)) + v1x, v2y = (e * Math.abs(u1y - u2y)) + v1y;
+        console.log(object1.physics.velocity, object2.physics.velocity);
+        object1.physics.velocity = new PVector(v1x, v1y);
+        object2.physics.velocity = new PVector(v2x, v2y);
     }
 }

@@ -14,5 +14,5 @@ export declare class Scene {
     start(): void;
     private gravitySimulator;
     private collisonDetector;
-    private afterCollison;
+    private afterCollision;
 }

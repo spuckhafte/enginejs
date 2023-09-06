@@ -140,7 +140,7 @@ export class Scene {
                             if (
                                 typeof object.physics.restitution == 'number' &&
                                 typeof other.physics.restitution == 'number'
-                            ) this.afterCollison(object, other);
+                            ) this.afterCollision(object, other);
                             if (object.onCollision) object.onCollision(other);
                             if (other.onCollision) other.onCollision(object);
                         }
@@ -160,7 +160,7 @@ export class Scene {
                             if (
                                 typeof object.physics.restitution == 'number' &&
                                 typeof other.physics.restitution == 'number'
-                            ) this.afterCollison(object, other);
+                            ) this.afterCollision(object, other);
                             if (object.onCollision) object.onCollision(other);
                             if (other.onCollision) other.onCollision(object);
                         }
