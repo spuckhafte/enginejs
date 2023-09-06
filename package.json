@@ -1,12 +1,9 @@
 {
-  "name": "enginejs",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "name": "injan.js",
+  "version": "0.0.2",
+  "description": "game engine for the web",
+  "main": "./dist/index.js",
   "keywords": [],
-  "author": "",
+  "author": "Rakshit",
   "license": "ISC"
 }
