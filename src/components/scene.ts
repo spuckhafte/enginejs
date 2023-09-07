@@ -10,6 +10,9 @@ export class Scene {
     fps: number;
     private delta: (newVal: number | criya_Func<number, number>) => void;
 
+    /**This function will get called on every refresh after all internal methods complete.  */
+    requestFrame: CallableFunction | null = null;
+
     /**All the GameObjects packed in this scene */
     gameObjects: GameObject[] = [];
 
@@ -56,6 +59,7 @@ export class Scene {
         this.element.effect(() => {
             this.gravitySimulator();
             this.collisonDetector();
+            if (this.requestFrame) this.requestFrame();
         }, ['$delta$']);
 
         setInterval(() => {

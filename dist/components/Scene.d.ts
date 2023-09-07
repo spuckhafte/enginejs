@@ -4,6 +4,7 @@ import { GameObject } from "./gameObject";
 export declare class Scene {
     fps: number;
     private delta;
+    requestFrame: CallableFunction | null;
     gameObjects: GameObject[];
     element: Criya;
     G: number;

@@ -2,6 +2,7 @@ import Criya from "../helpers/criya";
 import { PVector } from "./vectors";
 export class Scene {
     constructor(init) {
+        this.requestFrame = null;
         this.gameObjects = [];
         this.G = 0.01;
         this.massyObjects = [];
@@ -31,6 +32,8 @@ export class Scene {
         this.element.effect(() => {
             this.gravitySimulator();
             this.collisonDetector();
+            if (this.requestFrame)
+                this.requestFrame();
         }, ['$delta$']);
         setInterval(() => {
             this.delta(prev => prev ? 0 : 1);
