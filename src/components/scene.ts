@@ -54,6 +54,8 @@ export class Scene {
             object.onready();
         if (object.onrefresh)
             object.effect(object.onrefresh, ['%delta%']);
+        
+        this.gameObjects.push(object);
     }
 
     start() {
