@@ -8,8 +8,8 @@ export declare class Scene {
     gameObjects: GameObject[];
     element: Criya;
     G: number;
-    private massyObjects;
-    private collidables;
+    massyObjects: GameObject[];
+    collidables: GameObject[];
     constructor(init: Scene_Init);
     pack(items: GameObject[]): void;
     newBind(object: GameObject): void;

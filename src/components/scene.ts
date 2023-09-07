@@ -22,8 +22,8 @@ export class Scene {
     /**Gravitational constant */
     G = 0.01;
 
-    private massyObjects: GameObject[] = [];
-    private collidables: GameObject[] = [];
+    massyObjects: GameObject[] = [];
+    collidables: GameObject[] = [];
 
     constructor(init: Scene_Init) {
         this.element = new Criya({ type: 'span', parent: "#app" });
