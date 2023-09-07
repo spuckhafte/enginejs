@@ -32,9 +32,28 @@ export class Scene {
         this.delta = this.element.state('delta', 0)[1];
     }
 
-    /**Bind different GameObjects in this scene */
+    /**Bind different GameObjects in this scene (before starting the animation, i.e., before using `.start`) */
     pack(items: GameObject[]) {
         this.gameObjects = [...this.gameObjects, ...items];
+    }
+
+    /**Bind a new element to the scene anytime anywhere. */
+    newBind(object: GameObject) {
+        Criya.subscribe(object, this.element, ['delta']);
+        object.make();
+
+        if (object.physics.mass) {
+            this.massyObjects.push(object);
+        }
+
+        if (object.physics.collision) {
+            this.collidables.push(object);
+        }
+
+        if (object.onready)
+            object.onready();
+        if (object.onrefresh)
+            object.effect(object.onrefresh, ['%delta%']);
     }
 
     start() {

@@ -12,6 +12,7 @@ export declare class Scene {
     private collidables;
     constructor(init: Scene_Init);
     pack(items: GameObject[]): void;
+    newBind(object: GameObject): void;
     start(): void;
     private gravitySimulator;
     private collisonDetector;

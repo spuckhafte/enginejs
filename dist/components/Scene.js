@@ -14,6 +14,20 @@ export class Scene {
     pack(items) {
         this.gameObjects = [...this.gameObjects, ...items];
     }
+    newBind(object) {
+        Criya.subscribe(object, this.element, ['delta']);
+        object.make();
+        if (object.physics.mass) {
+            this.massyObjects.push(object);
+        }
+        if (object.physics.collision) {
+            this.collidables.push(object);
+        }
+        if (object.onready)
+            object.onready();
+        if (object.onrefresh)
+            object.effect(object.onrefresh, ['%delta%']);
+    }
     start() {
         for (let object of this.gameObjects) {
             Criya.subscribe(object, this.element, ['delta']);
