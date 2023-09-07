@@ -19,10 +19,13 @@ export class Vector {
         return new Vector(this.x0 + (scalar * this.X), this.y0 + (scalar * this.Y), this.x0, this.y0);
     }
     normalize() {
-        return new Vector(this.X / this.value(), this.Y / this.value(), this.x0, this.y0);
+        return new Vector(this.X / this.value(), this.Y / this.value(), 0, 0);
     }
     flip() {
         return new Vector(-this.x, -this.y, this.x0, this.y0);
+    }
+    shiftToPVector() {
+        return new PVector(this.X, this.Y);
     }
     get X() {
         return this.x - this.x0;
@@ -37,5 +40,8 @@ export class PVector extends Vector {
     }
     vectorTo(vec) {
         return new Vector(vec.x, vec.y, this.x, this.y);
+    }
+    resultant(vec) {
+        return new Vector(this.x + vec.x, this.y + vec.y, 0, 0);
     }
 }

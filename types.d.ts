@@ -17,4 +17,6 @@ export interface TheBody {
     width: number,
     height: number,
     color: string,
+    /**Radius: [value, unit] */
+    radius: [number, '%'|'px']
 }

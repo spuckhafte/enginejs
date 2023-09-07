@@ -1,7 +1,7 @@
 import { Scene_Init } from "../../types";
 import Criya, { criya_Func } from "../helpers/criya";
 import { GameObject } from "./gameObject";
-import { PVector } from "./vectors";
+import { PVector, Vector } from "./vectors";
 
 /**
  * The `Scene` class is the core component in Criya applications, serving as a container for game objects and orchestrating their interactions. It allows developers to define the FPS for animations, pack multiple game objects within the scene, and manage gravitational simulations.
@@ -121,20 +121,20 @@ export class Scene {
                 const other = this.collidables[otherIndex];
 
                 const displacement = object.physics.position.vectorTo(other.physics.position);
-                
+
                 if (object.physics.collision == 'rectangle') {
                     if (other.physics.collision == 'circle') {
                         // yet to be figured
-                    } 
-                    
+                    }
+
                     if (other.physics.collision == 'rectangle') {
-                        const xColliding = 
-                            Math.abs(displacement.X) <= 
-                            ((object.body.width/2) + (other.body.width/2));
-                        
-                        const yColliding = 
-                            Math.abs(displacement.Y) <= 
-                            ((object.body.height/2) + (other.body.height/2));
+                        const xColliding =
+                            Math.abs(displacement.X) <=
+                            ((object.body.width / 2) + (other.body.width / 2));
+
+                        const yColliding =
+                            Math.abs(displacement.Y) <=
+                            ((object.body.height / 2) + (other.body.height / 2));
 
                         if (xColliding && yColliding) {
                             if (
@@ -153,8 +153,8 @@ export class Scene {
                     }
 
                     if (other.physics.collision == 'circle') {
-                        const circlesColliding = 
-                            displacement.value() <= (object.body.width/2 + other.body.width/2);
+                        const circlesColliding =
+                            displacement.value() <= (object.body.width / 2 + other.body.width / 2);
 
                         if (circlesColliding) {
                             if (
@@ -175,34 +175,45 @@ export class Scene {
     private afterCollision(object1: GameObject, object2: GameObject) {
         /* DOESN't WORK */
 
-        // const displacement1 = object1.physics.position.vectorTo(object2.physics.position);
-        // const displacement2 = object2.physics.position.vectorTo(object1.physics.position);
+        const displacement1 = object1.physics.position.vectorTo(object2.physics.position);
+        const displacement2 = object2.physics.position.vectorTo(object1.physics.position);
 
-        const 
-            m1 = object1.physics.mass as number, 
+        const u1LOI = displacement1.normalize().shiftToPVector().scale(
+            object1.physics.velocity.dot(displacement1.normalize())
+        ).shiftToPVector();
+
+        const u2LOI = displacement2.normalize().scale(
+            object2.physics.velocity.dot(displacement2.normalize())
+        ).shiftToPVector();
+
+        const freeVector1 = u1LOI.vectorTo(object1.physics.velocity.shiftToPVector()).shiftToPVector();
+        const freeVector2 = u2LOI.vectorTo(object2.physics.velocity.shiftToPVector());
+
+        const dir1 = displacement1.dirn() < 0 ? -1 : 1;
+        const dir2 = displacement1.dirn() < 0 ? - 1 : 1;
+
+        const
+            m1 = object1.physics.mass as number,
             m2 = object2.physics.mass as number,
 
-            u1x = object1.physics.velocity.X, 
-            u2x = object2.physics.velocity.X,
+            u1 = u1LOI.value() * dir1,
+            u2 = u2LOI.value() * dir2,
 
-            u1y = object1.physics.velocity.Y,
-            u2y = object2.physics.velocity.Y,
-
-            e = (object1.physics.restitution as number) 
+            e = (object1.physics.restitution as number)
                 + (object2.physics.restitution as number) / 2;
 
 
-        const 
-            v1x = ((m1 * u1x) + (m2 * u2x) - (m2 * e * Math.abs(u1x - u2x))) / (m1 + m2),
-            v1y = ((m1 * u1y) + (m2 * u2y) - (m2 * e * Math.abs(u1y - u2y))) / (m1 + m2),
+        const
+            v1 = ((m1 * u1) + (m2 * u2) - (m2 * e * (u1 - u2))) / (m1 + m2),
+            v2 = (e * (u1 - u2)) + v1;
 
-            v2x = (e * Math.abs(u1x - u2x)) + v1x,
-            v2y = (e * Math.abs(u1y - u2y)) + v1y;
-        
+        const flip1 = (Math.sign(v1) == Math.sign(u1) ? false : true);
+        const flip2 = (Math.sign(v2) == Math.sign(u2) ? false : true);
 
-        console.log(object1.physics.velocity, object2.physics.velocity);
+        const v1LOI = (flip1 ? u1LOI.flip() : u1LOI).normalize().scale(Math.abs(v1));
+        const v2LOI = (flip2 ? u2LOI.flip() : u2LOI).normalize().scale(Math.abs(v2));
 
-        object1.physics.velocity = new PVector(v1x, v1y)
-        object2.physics.velocity = new PVector(v2x, v2y);
+        object1.physics.velocity = freeVector1.shiftToPVector().resultant(v1LOI.shiftToPVector());
+        object2.physics.velocity = freeVector2.shiftToPVector().resultant(v2LOI.shiftToPVector());
     }
 }

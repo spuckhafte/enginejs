@@ -18,7 +18,8 @@ export class GameObject extends Criya {
     body: TheBody = {
         width: 10,
         height: 10,
-        color: 'black'
+        color: 'black',
+        radius: [0, '%']
     }
 
     /**This function will be called when the game object is ready and is on the scene */
@@ -36,7 +37,8 @@ export class GameObject extends Criya {
         this.prop = {
             ...this.prop,
             css: {
-                transform: "translate(-50%, -50%)"
+                position: 'absolute',
+                transform: "translate(-50%, -50%)",
             }
         }
 
@@ -53,7 +55,6 @@ export class GameObject extends Criya {
                 ...This.prop,
                 css: {
                     ...This.prop?.css,
-                    position: 'absolute',
 
                     left: This.physics.position.x + "px",
                     top: -This.physics.position.y + "px",
@@ -61,6 +62,8 @@ export class GameObject extends Criya {
                     width: This.body.width + "px",
                     height: This.body.height + "px",
                     backgroundColor: This.body.color,
+
+                    borderRadius: This.body.radius[0] + This.body.radius[1]
                 }
             }
 

@@ -10,10 +10,12 @@ export declare class Vector {
     scale(scalar: number): Vector;
     normalize(): Vector;
     flip(): Vector;
+    shiftToPVector(): PVector;
     get X(): number;
     get Y(): number;
 }
 export declare class PVector extends Vector {
     constructor(x: number, y: number);
     vectorTo(vec: PVector): Vector;
+    resultant(vec: PVector): Vector;
 }

@@ -110,11 +110,22 @@ export class Scene {
         }
     }
     afterCollision(object1, object2) {
-        const m1 = object1.physics.mass, m2 = object2.physics.mass, u1x = object1.physics.velocity.X, u2x = object2.physics.velocity.X, u1y = object1.physics.velocity.Y, u2y = object2.physics.velocity.Y, e = object1.physics.restitution
+        const displacement1 = object1.physics.position.vectorTo(object2.physics.position);
+        const displacement2 = object2.physics.position.vectorTo(object1.physics.position);
+        const u1LOI = displacement1.normalize().shiftToPVector().scale(object1.physics.velocity.dot(displacement1.normalize())).shiftToPVector();
+        const u2LOI = displacement2.normalize().scale(object2.physics.velocity.dot(displacement2.normalize())).shiftToPVector();
+        const freeVector1 = u1LOI.vectorTo(object1.physics.velocity.shiftToPVector()).shiftToPVector();
+        const freeVector2 = u2LOI.vectorTo(object2.physics.velocity.shiftToPVector());
+        const dir1 = displacement1.dirn() < 0 ? -1 : 1;
+        const dir2 = displacement1.dirn() < 0 ? -1 : 1;
+        const m1 = object1.physics.mass, m2 = object2.physics.mass, u1 = u1LOI.value() * dir1, u2 = u2LOI.value() * dir2, e = object1.physics.restitution
             + object2.physics.restitution / 2;
-        const v1x = ((m1 * u1x) + (m2 * u2x) - (m2 * e * Math.abs(u1x - u2x))) / (m1 + m2), v1y = ((m1 * u1y) + (m2 * u2y) - (m2 * e * Math.abs(u1y - u2y))) / (m1 + m2), v2x = (e * Math.abs(u1x - u2x)) + v1x, v2y = (e * Math.abs(u1y - u2y)) + v1y;
-        console.log(object1.physics.velocity, object2.physics.velocity);
-        object1.physics.velocity = new PVector(v1x, v1y);
-        object2.physics.velocity = new PVector(v2x, v2y);
+        const v1 = ((m1 * u1) + (m2 * u2) - (m2 * e * (u1 - u2))) / (m1 + m2), v2 = (e * (u1 - u2)) + v1;
+        const flip1 = (Math.sign(v1) == Math.sign(u1) ? false : true);
+        const flip2 = (Math.sign(v2) == Math.sign(u2) ? false : true);
+        const v1LOI = (flip1 ? u1LOI.flip() : u1LOI).normalize().scale(Math.abs(v1));
+        const v2LOI = (flip2 ? u2LOI.flip() : u2LOI).normalize().scale(Math.abs(v2));
+        object1.physics.velocity = freeVector1.shiftToPVector().resultant(v1LOI.shiftToPVector());
+        object2.physics.velocity = freeVector2.shiftToPVector().resultant(v2LOI.shiftToPVector());
     }
 }

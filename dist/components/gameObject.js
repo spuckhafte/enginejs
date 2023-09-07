@@ -11,13 +11,15 @@ export class GameObject extends Criya {
         this.body = {
             width: 10,
             height: 10,
-            color: 'black'
+            color: 'black',
+            radius: [0, '%']
         };
         this.onready = null;
         this.onrefresh = null;
         this.onCollision = null;
         this.prop = Object.assign(Object.assign({}, this.prop), { css: {
-                transform: "translate(-50%, -50%)"
+                position: 'absolute',
+                transform: "translate(-50%, -50%)",
             } });
         const This = this;
         function __refresh() {
@@ -26,7 +28,7 @@ export class GameObject extends Criya {
             This.physics.velocity.y += This.physics.acceleration.y;
             This.physics.position.x += This.physics.velocity.x;
             This.physics.position.y += This.physics.velocity.y;
-            This.prop = Object.assign(Object.assign({}, This.prop), { css: Object.assign(Object.assign({}, (_a = This.prop) === null || _a === void 0 ? void 0 : _a.css), { position: 'absolute', left: This.physics.position.x + "px", top: -This.physics.position.y + "px", width: This.body.width + "px", height: This.body.height + "px", backgroundColor: This.body.color }) });
+            This.prop = Object.assign(Object.assign({}, This.prop), { css: Object.assign(Object.assign({}, (_a = This.prop) === null || _a === void 0 ? void 0 : _a.css), { left: This.physics.position.x + "px", top: -This.physics.position.y + "px", width: This.body.width + "px", height: This.body.height + "px", backgroundColor: This.body.color, borderRadius: This.body.radius[0] + This.body.radius[1] }) });
             This.render();
         }
         this.onSubscribed(() => {

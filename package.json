@@ -1,6 +1,6 @@
 {
   "name": "injan.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "game engine for the web",
   "main": "./dist/index.js",
   "keywords": [],
