@@ -1,7 +1,7 @@
 import { Scene_Init } from "../../types";
 import Criya, { criya_Func } from "../helpers/criya";
 import { GameObject } from "./gameObject";
-import { PVector, Vector } from "./vectors";
+import { PVector } from "./vectors";
 
 /**
  * The `Scene` class is the core component in Criya applications, serving as a container for game objects and orchestrating their interactions. It allows developers to define the FPS for animations, pack multiple game objects within the scene, and manage gravitational simulations.
