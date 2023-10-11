@@ -1,26 +1,35 @@
 import Criya from "../helpers/criya";
 import { PVector, Vector } from "./vectors";
+/**
+ * The `GameObject` class in Criya encapsulates the attributes and behavior of individual game objects, including their physical properties, appearance details, and customizable logic hooks (eg: `onrefresh` and `onready`).
+ */
 export class GameObject extends Criya {
     constructor(init) {
         super(Object.assign({ type: "div", parent: "#app" }, init));
+        /**Physical properties of a game object, viz: position, velocity, etc. */
         this.physics = {
             position: new PVector(0, 0),
             velocity: new Vector(0, 0, 0, 0),
             acceleration: new Vector(0, 0, 0, 0),
         };
+        /**Describe how the object will look like */
         this.body = {
             width: 10,
             height: 10,
             color: 'black',
             radius: [0, '%']
         };
+        /**This function will be called when the game object is ready and is on the scene */
         this.onready = null;
+        /**This function gets called whenever the screen refreshes */
         this.onrefresh = null;
+        /**This function will get called whenver this object will collide with another `collidable` object */
         this.onCollision = null;
         this.prop = Object.assign(Object.assign({}, this.prop), { css: {
                 position: 'absolute',
                 transform: "translate(-50%, -50%)",
             } });
+        // class' [this] is getting shadowed inside the function
         const This = this;
         function __refresh() {
             var _a;

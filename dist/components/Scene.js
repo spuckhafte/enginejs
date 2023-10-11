@@ -1,9 +1,15 @@
 import Criya from "../helpers/criya";
 import { PVector } from "./vectors";
+/**
+ * The `Scene` class is the core component in Criya applications, serving as a container for game objects and orchestrating their interactions. It allows developers to define the FPS for animations, pack multiple game objects within the scene, and manage gravitational simulations.
+*/
 export class Scene {
     constructor(init) {
+        /**This function will get called on every refresh after all internal methods complete.  */
         this.requestFrame = null;
+        /**All the GameObjects packed in this scene */
         this.gameObjects = [];
+        /**Gravitational constant */
         this.G = 0.01;
         this.massyObjects = [];
         this.collidables = [];
@@ -11,9 +17,11 @@ export class Scene {
         this.fps = init.fps;
         this.delta = this.element.state('delta', 0)[1];
     }
+    /**Bind different GameObjects in this scene (before starting the animation, i.e., before using `.start`) */
     pack(items) {
         this.gameObjects = [...this.gameObjects, ...items];
     }
+    /**Bind a new element to the scene anytime anywhere. */
     newBind(object) {
         Criya.subscribe(object, this.element, ['delta']);
         object.make();
@@ -54,6 +62,7 @@ export class Scene {
             this.delta(prev => prev ? 0 : 1);
         }, 1 / this.fps * 1000);
     }
+    /**Calculates and apply gravitational effects on every "massy" object due to every "massy" object */
     gravitySimulator() {
         const doneWith = [];
         for (let objectIndex = 0; objectIndex < this.massyObjects.length; objectIndex += 1) {
@@ -79,6 +88,7 @@ export class Scene {
             doneWith.push(objectIndex);
         }
     }
+    /**Checks if any of the `collidables` is colliding with another */
     collisonDetector() {
         const doneWith = [];
         for (let objectIndex = 0; objectIndex < this.collidables.length; objectIndex += 1) {
@@ -90,6 +100,7 @@ export class Scene {
                 const displacement = object.physics.position.vectorTo(other.physics.position);
                 if (object.physics.collision == 'rectangle') {
                     if (other.physics.collision == 'circle') {
+                        // yet to be figured
                     }
                     if (other.physics.collision == 'rectangle') {
                         const xColliding = Math.abs(displacement.X) <=
@@ -109,6 +120,7 @@ export class Scene {
                 }
                 if (object.physics.collision == 'circle') {
                     if (other.physics.collision == 'rectangle') {
+                        // yet to be figured
                     }
                     if (other.physics.collision == 'circle') {
                         const circlesColliding = displacement.value() <= (object.body.width / 2 + other.body.width / 2);
@@ -128,6 +140,7 @@ export class Scene {
         }
     }
     afterCollision(object1, object2) {
+        /* DOESN't WORK */
         const displacement1 = object1.physics.position.vectorTo(object2.physics.position);
         const displacement2 = object2.physics.position.vectorTo(object1.physics.position);
         const u1LOI = displacement1.normalize().shiftToPVector().scale(object1.physics.velocity.dot(displacement1.normalize())).shiftToPVector();
