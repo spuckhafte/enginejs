@@ -27,7 +27,7 @@ export class Vector {
     }
     /**Get a unit vector along the OG vector. */
     normalize() {
-        return new Vector(this.X / this.value(), this.Y / this.value(), 0, 0);
+        return new Vector((this.X / this.value()) ? (this.X / this.value()) : 0, (this.Y / this.value()) ? (this.Y / this.value()) : 0, 0, 0);
     }
     /**Flips the sign of each component and returns a new vector. */
     flip() {
@@ -36,6 +36,16 @@ export class Vector {
     /**Parallel transforms a vector to origin */
     shiftToPVector() {
         return new PVector(this.X, this.Y);
+    }
+    /**Projection of a vector onto another */
+    projectOnto(vec) {
+        const component = this.dot(vec.normalize());
+        return vec.normalize().scale(component);
+    }
+    /**Angle between two vectors */
+    angle(vec) {
+        const cosVal = this.dot(vec) / (this.value() * vec.value());
+        return Math.acos(cosVal > 1 ? 1 : (cosVal < -1 ? -1 : cosVal));
     }
     /**Net component in X-direction. */
     get X() {
@@ -60,5 +70,8 @@ export class PVector extends Vector {
     /**Calculate resultant vector */
     resultant(vec) {
         return new Vector(this.x + vec.x, this.y + vec.y, 0, 0);
+    }
+    shiftToVector() {
+        return new Vector(this.x, this.y, 0, 0);
     }
 }

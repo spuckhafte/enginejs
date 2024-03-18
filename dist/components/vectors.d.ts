@@ -21,6 +21,10 @@ export declare class Vector {
     flip(): Vector;
     /**Parallel transforms a vector to origin */
     shiftToPVector(): PVector;
+    /**Projection of a vector onto another */
+    projectOnto(vec: Vector): Vector;
+    /**Angle between two vectors */
+    angle(vec: Vector): number;
     /**Net component in X-direction. */
     get X(): number;
     /**Net component in Y-direction. */
@@ -35,4 +39,5 @@ export declare class PVector extends Vector {
     vectorTo(vec: PVector): Vector;
     /**Calculate resultant vector */
     resultant(vec: PVector): Vector;
+    shiftToVector(): Vector;
 }

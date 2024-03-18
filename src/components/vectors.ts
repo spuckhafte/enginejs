@@ -13,7 +13,7 @@ export class Vector {
     /**Magnitude of vector. */
     value() {
         return Math.sqrt(
-            Math.pow(this.X, 2) + 
+            Math.pow(this.X, 2) +
             Math.pow(this.Y, 2)
         );
     }
@@ -33,9 +33,9 @@ export class Vector {
     /**Multiply a scalar to the OG vector. */
     scale(scalar: number) {
         return new Vector(
-            this.x0 + (scalar * this.X), 
-            this.y0 + (scalar * this.Y), 
-            this.x0, 
+            this.x0 + (scalar * this.X),
+            this.y0 + (scalar * this.Y),
+            this.x0,
             this.y0
         );
     }
@@ -43,8 +43,8 @@ export class Vector {
     /**Get a unit vector along the OG vector. */
     normalize() {
         return new Vector(
-            this.X / this.value(),
-            this.Y / this.value(),
+            (this.X / this.value()) ? (this.X / this.value()) : 0 ,
+            (this.Y / this.value()) ? (this.Y / this.value()) : 0,
             0, 0
         )
     }
@@ -62,6 +62,18 @@ export class Vector {
         return new PVector(this.X, this.Y);
     }
 
+    /**Projection of a vector onto another */
+    projectOnto(vec: Vector) {
+        const component = this.dot(vec.normalize());
+        return vec.normalize().scale(component);
+    }
+
+    /**Angle between two vectors */
+    angle(vec: Vector) {
+        const cosVal = this.dot(vec) / (this.value() * vec.value());
+        return Math.acos( cosVal > 1 ? 1 : ( cosVal < -1 ? -1 : cosVal ) );
+    }
+
     /**Net component in X-direction. */
     get X() {
         return this.x - this.x0
@@ -77,7 +89,7 @@ export class Vector {
  * The `PVector` class is a specialized version of the `Vector` class, designed for representing position vectors. It simplifies the creation of position vectors with default origin values and provides a method for calculating vectors pointing from the current position to a specified destination.
  */
 export class PVector extends Vector {
-    constructor(x: number, y :number) {
+    constructor(x: number, y: number) {
         super(x, y, 0, 0);
     }
 
@@ -95,5 +107,12 @@ export class PVector extends Vector {
             this.x + vec.x, this.y + vec.y,
             0, 0
         )
+    }
+
+    shiftToVector() {
+        return new Vector(
+            this.x, this.y,
+            0, 0
+        );
     }
 }
