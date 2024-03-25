@@ -1,4 +1,4 @@
-import { Physics, TheBody } from "../../types";
+import { Controller, Physics, TheBody } from "../../types";
 import Criya from "../helpers/criya";
 import { PVector, Vector } from "./vectors";
 
@@ -30,9 +30,17 @@ export class GameObject extends Criya {
 
     /**This function will get called whenver this object will collide with another `collidable` object */
     onCollision: ((object: GameObject) => void) | null = null;
+    
+    /**Manage the controller interface (keyboard) */
+    controller?: Controller = undefined;
 
-    constructor(init?: { class?: string, id?: string }) {
-        super({ type: "div", parent: "#app", ...init });
+    constructor(init?: { controller?: Controller, class?: string, id?: string }) {
+        super({ 
+            type: "div", 
+            parent: "#app", 
+            id: init?.id, 
+            class: init?.class, 
+        });
 
         this.prop = {
             ...this.prop,
@@ -42,9 +50,71 @@ export class GameObject extends Criya {
             }
         }
 
+        this.controller = init?.controller;
+
+        if (this?.controller?.activate) {
+            window.addEventListener('keydown', ({ key }) => {
+                key = key.toLowerCase()
+                if (!['w', 'a', 's', 'd'].includes(key)) return;
+                if (!this.physics) return;
+
+                if (key == "w") {
+                    if (this.controller?.w)
+                        this.controller.w();
+                    else {
+                        if (this.physics.velocity.Y !== 0) return;
+                        this.physics.velocity = new Vector(
+                            0, Math.abs(this.physics.velocity.value() ?? 1),  
+                            0, 0
+                        );
+                    }
+                }
+
+                if (key == "a") {
+                    if (this.controller?.a)
+                        this.controller.a();
+                    else {
+                        if (this.physics.velocity.X !== 0) return;
+                        this.physics.velocity = new Vector(
+                            -Math.abs(this.physics.velocity.value() ?? 1), 0,  
+                            0, 0
+                        );
+                    }
+                }
+
+                if (key == "s") {
+                    if (this.controller?.s)
+                        this.controller.s();
+                    else {
+                        if (this.physics.velocity.Y !== 0) return;
+                        this.physics.velocity = new Vector(
+                            0, -Math.abs(this.physics.velocity.value() ?? 1),  
+                            0, 0
+                        );
+                    }
+                }
+
+                if (key == "d") {
+                    if (this.controller?.d)
+                        this.controller.d();
+                    else {
+                        if (this.physics.velocity.X !== 0) return;
+                        this.physics.velocity = new Vector(
+                            Math.abs(this.physics.velocity.value() ?? 1), 0,  
+                            0, 0
+                        );
+                    }
+                }
+
+                this.render();
+            });
+        }
+
         // class' [this] is getting shadowed inside the function
         const This = this;
         function __refresh() {
+            
+
             This.physics.velocity.x += This.physics.acceleration.x;
             This.physics.velocity.y += This.physics.acceleration.y;
 

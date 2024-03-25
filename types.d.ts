@@ -20,3 +20,11 @@ export interface TheBody {
     /**Radius: [value, unit] */
     radius: [number, '%'|'px']
 }
+
+export interface Controller {
+    activate: boolean,
+    w?: () => void,
+    a?: () => void,
+    s?: () => void,
+    d?: () => void,
+}
