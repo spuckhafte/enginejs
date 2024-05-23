@@ -1,4 +1,4 @@
-import { Scene_Init } from "../../types";
+import { Scene_Init } from "../../types/types";
 import Criya from "../helpers/criya";
 import { GameObject } from "./gameObject";
 /**

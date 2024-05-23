@@ -1,4 +1,4 @@
-import { Controller, Physics, TheBody } from "../../types";
+import { Controller, Physics, TheBody } from "../../types/types";
 import Criya from "../helpers/criya";
 /**
  * The `GameObject` class in Criya encapsulates the attributes and behavior of individual game objects, including their physical properties, appearance details, and customizable logic hooks (eg: `onrefresh` and `onready`).

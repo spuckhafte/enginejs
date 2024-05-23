@@ -1,4 +1,4 @@
-import { Controller, Physics, TheBody } from "../../types";
+import { Controller, Physics, TheBody } from "../../types/types";
 import Criya from "../helpers/criya";
 import { PVector, Vector } from "./vectors";
 

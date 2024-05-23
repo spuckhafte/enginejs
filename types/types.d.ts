@@ -23,6 +23,7 @@ export interface TheBody {
 
 export interface Controller {
     activate: boolean,
+    persist_default_behaviour?: boolean,
     w?: () => void,
     a?: () => void,
     s?: () => void,
